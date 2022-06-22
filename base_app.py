@@ -29,7 +29,7 @@ import joblib,os
 import pandas as pd
 
 # Vectorizer
-news_vectorizer = open("resources/tfidfvect.pkl","rb")
+news_vectorizer = open("resources/tfidf_vector","rb")
 tweet_cv = joblib.load(news_vectorizer) # loading your vectorizer from the pkl file
 
 # Load your raw data
@@ -39,28 +39,41 @@ raw = pd.read_csv("resources/train.csv")
 def main():
 	"""Tweet Classifier App with Streamlit """
 
-	# Creates a main title and subheader on your page -
+# Creates a main title and subheader on your page -
 	# these are static across all pages
-	st.title("Tweet Classifer")
-	st.subheader("Climate change tweet classification")
+	st.title("Global Tweet Vision")
+	st.subheader("Classification of Tweets")
 
 	# Creating sidebar with selection box -
 	# you can create multiple pages this way
-	options = ["Prediction", "Information"]
-	selection = st.sidebar.selectbox("Choose Option", options)
+	options = ["Home","Linear SVC Prediction", "Information"]
+	selection = st.sidebar.selectbox("Navigate", options)
+
+	# Building out the "Home" page
+	if selection == "Home":
+		st.info("Welcome to **_Earth_** and its possible future")
+		st.image("./Earth.jpg")
+		# You can read a markdown file from supporting resources folder
+		st.markdown("This is Earth, broadcasting on all channels, we don't have much time!!! We need to make the change even if it is not for us but for future generations.") 
+                    
+		st.markdown("Humans and wild animals face new challenges for survival because of climate change. More frequent and intense drought, storms, heat waves, rising sea levels, melting glaciers and warming oceans can directly harm animals, destroy the places they live, and wreak havoc on people’s livelihoods and communities.")
+                    
+		st.markdown("**CBB1 DS Enterprise** has been tasked with _classified_ mission, with limited data given to help predict the classifications of future tweets. With **great** succes we have made multiple models to showcase.")
+        
 
 	# Building out the "Information" page
 	if selection == "Information":
-		st.info("General Information")
+		st.info("CBB1 DS Enterprise was tasked to ")
 		# You can read a markdown file from supporting resources folder
 		st.markdown("Some information here")
 
 		st.subheader("Raw Twitter data and label")
 		if st.checkbox('Show raw data'): # data is hidden if box is unchecked
 			st.write(raw[['sentiment', 'message']]) # will write the df to the page
+            
 
 	# Building out the predication page
-	if selection == "Prediction":
+	if selection == "Linear SVC Prediction":
 		st.info("Prediction with ML Models")
 		# Creating a text box for user input
 		tweet_text = st.text_area("Enter Text","Type Here")
@@ -70,7 +83,7 @@ def main():
 			vect_text = tweet_cv.transform([tweet_text]).toarray()
 			# Load your .pkl file with the model of your choice + make predictions
 			# Try loading in multiple models to give the user a choice
-			predictor = joblib.load(open(os.path.join("resources/Logistic_regression.pkl"),"rb"))
+			predictor = joblib.load(open(os.path.join("resources/lsvc.pkl"),"rb"))
 			prediction = predictor.predict(vect_text)
 
 			# When model has successfully run, will print prediction
