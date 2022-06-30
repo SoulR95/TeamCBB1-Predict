@@ -41,55 +41,72 @@ def main():
 
 # Creates a main title and subheader on your page -
 	# these are static across all pages
-	st.title("Global Tweet Vision")
-	st.subheader("Classification of Tweets")
+	st.title("CLASSIFY IT")
+	st.subheader("Classification of Tweet species")
 
 	# Creating sidebar with selection box -
 	# you can create multiple pages this way
-	options = ["Home","Linear SVC Prediction", "Information"]
+	options = ["Home","Information","Model Accuracy", "Data","Contact Us"]
 	selection = st.sidebar.selectbox("Navigate", options)
-
+    
+    #Creating The Imprtant part for Predictions
+	tweet_text = st.sidebar.text_area("Classify Tweet","Tweet Here")
+	if st.sidebar.button("Classify"):
+		# Transforming user input with vectorizer
+		vect_text = tweet_cv.transform([tweet_text]).toarray()
+		# Load your .pkl file with the model of your choice + make predictions
+		# Try loading in multiple models to give the user a choice
+		predictor = joblib.load(open(os.path.join("resources/lsvc.pkl"),"rb"))
+		prediction = predictor.predict(vect_text)
+		# When model has successfully run, will print prediction
+		# You can use a dictionary or similar structure to make this output
+		# more human interpretable.
+		st.sidebar.success("Tweet Categorized as: {}".format(prediction)) 
+        st.sidebar.image("./Keys.jpg")
+      
+        
 	# Building out the "Home" page
 	if selection == "Home":
 		st.info("Welcome to **_Earth_** and its possible future")
 		st.image("./Earth.jpg")
 		# You can read a markdown file from supporting resources folder
-		st.markdown("This is Earth, broadcasting on all channels, we don't have much time!!! We need to make the change even if it is not for us but for future generations.") 
-                    
+		st.markdown("## Our Story")
+        
 		st.markdown("Humans and wild animals face new challenges for survival because of climate change. More frequent and intense drought, storms, heat waves, rising sea levels, melting glaciers and warming oceans can directly harm animals, destroy the places they live, and wreak havoc on people’s livelihoods and communities.")
-                    
-		st.markdown("**CBB1 DS Enterprise** has been tasked with _classified_ mission, with limited data given to help predict the classifications of future tweets. With **great** succes we have made multiple models to showcase.")
+        
+		st.markdown("**CBB1 D.S Discovery** We discovered that that we could make a solution to a existing problem, what if we could create a machine learning model that is able to classidfy whether or not a a person believes in climate change based on their tweets? It would give us the advantage as to know which people we could potentially market for. Thus inspiring Classify It.")
+        
+		st.markdown("Here at  D.S Discovery, Data Science Company. We are on the path to find some great breakthroughs  as we are proud supporters in combating Climate Change. Wouldn’t you want an app that could Predict whether a person or entity is for or against climate change. Imagine wanting to know if someone would invest in renewable energy  or more likely to spend more money on non-renewable  energy.") 
+
+		st.markdown("We have the solution for you! This Web app has been designed to take any raw data tweet and Classify It into either, Pro, Anti, Neutral or News.")       
         
 
 	# Building out the "Information" page
 	if selection == "Information":
-		st.info("CBB1 DS Enterprise was tasked to ")
+		st.info(" *About us*")
 		# You can read a markdown file from supporting resources folder
-		st.markdown("Some information here")
-
+		st.markdown("## CBB1 D.S Discovery consists of 5 members ##")
+        
+		st.markdown("Riaan James-Verwey - Coordinator/Data Scientist")
+		st.markdown("Samuel Mnisi - Coordinator/Data Scientist")
+		st.markdown("Zanele Myeni - Data Scientist")
+		st.markdown("Thato Lethetsa - Data Scientist")
+		st.markdown("Dineo Makwala - Data Scientist")
+        
+		st.markdown("")
+        
+		st.markdown("Trello board : https://trello.com/b/HCP0k4mh/classification-regression")
+		st.markdown("Github Repo  here : https://github.com/SoulR95/Class-Regression-CBB1")
+        
+	# Building out the "Data" page
+	if selection == "Model Accuracy":        
+		st.subheader("Different Models and their Score")
+        
+	# Building out the "Data" page
+	if selection == "Data":        
 		st.subheader("Raw Twitter data and label")
 		if st.checkbox('Show raw data'): # data is hidden if box is unchecked
 			st.write(raw[['sentiment', 'message']]) # will write the df to the page
-            
-
-	# Building out the predication page
-	if selection == "Linear SVC Prediction":
-		st.info("Prediction with ML Models")
-		# Creating a text box for user input
-		tweet_text = st.text_area("Enter Text","Type Here")
-
-		if st.button("Classify"):
-			# Transforming user input with vectorizer
-			vect_text = tweet_cv.transform([tweet_text]).toarray()
-			# Load your .pkl file with the model of your choice + make predictions
-			# Try loading in multiple models to give the user a choice
-			predictor = joblib.load(open(os.path.join("resources/lsvc.pkl"),"rb"))
-			prediction = predictor.predict(vect_text)
-
-			# When model has successfully run, will print prediction
-			# You can use a dictionary or similar structure to make this output
-			# more human interpretable.
-			st.success("Text Categorized as: {}".format(prediction))
 
 # Required to let Streamlit instantiate our web app.  
 if __name__ == '__main__':
